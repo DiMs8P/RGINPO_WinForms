@@ -1,4 +1,6 @@
-﻿namespace RGINPO_WinForms
+﻿using System.Windows.Forms.DataVisualization.Charting;
+
+namespace RGINPO_WinForms
 {
     partial class Form1
     {
@@ -26,28 +28,25 @@
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
+
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1
-           = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new
-           System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new
-           System.Windows.Forms.DataVisualization.Charting.Series();
+            ChartArea chartArea1 = new ChartArea();
+            Legend legend1 = new Legend();
+            Series series1 = new Series();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.addButton = new System.Windows.Forms.Button();
-            this.chart1 = new
-           System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chart1 = new Chart();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
-//
-// dataGridView1
-//
-this.dataGridView1.ColumnHeadersHeightSizeMode =
-System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            //
+            // dataGridView1
+            //
+            this.dataGridView1.ColumnHeadersHeightSizeMode =
+            System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(321, 57);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(240, 150);
@@ -122,10 +121,10 @@ System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Button addButton;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private DataGridView dataGridView1;
+        private Button addButton;
+        private Chart chart1;
+        private Button button1;
+        private Button button2;
     }
 }
