@@ -1,9 +1,11 @@
+using System;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RGINPO_WinForms
 {
     public partial class Form1 : Form
     {
+        private Dictionary<string, string> _files = new Dictionary<string, string>() { };
         public BindingSource BindingSource { get; set; }
         private CustomChart CustomChart { get; set; }
 
@@ -21,8 +23,14 @@ namespace RGINPO_WinForms
             comboBox1.SelectedIndex = 0;
 
             dataGridView1.DataSource = BindingSource;
-            BindingSource.ListChanged += comboBox1_SelectedIndexChanged;
+            BindingSource.ListChanged += ComboBox1_SelectedIndexChanged;
+
+            DataGridViewTextBoxColumn fileNameColumn = new DataGridViewTextBoxColumn();
+            fileNameColumn.HeaderText = "File name";
+            dataGridView2.Columns.Add(fileNameColumn);
+            dataGridView2.CellContentClick += DataGridView2_CellContentClick;
         }
+
         private void AddButton_Click(object sender, EventArgs e)
         {
             BindingSource.Add(new Data() { X = 0, Y = 0 });
@@ -41,7 +49,7 @@ namespace RGINPO_WinForms
             CustomChart.chart1.DataSource = BindingSource;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (comboBox1.SelectedIndex)
             {
@@ -91,10 +99,16 @@ namespace RGINPO_WinForms
                 return;
             }
 
-            foreach (string fileName in openFileDialog.FileNames)
+            foreach (string fullFileName in openFileDialog.FileNames)
             {
-                var fileContent = ReadFileContent(fileName);
+                string directoryPath = Path.GetDirectoryName(fullFileName);
+                string fileName = Path.GetFileName(fullFileName);
+                _files.Add(fileName, directoryPath);
+
+                dataGridView2.Rows.Add(fileName);
+                var fileContent = ReadFileContent(fullFileName);
                 AddFileContentToDataGridView1(fileContent);
+                //CreateChartSeries(BindingSource, fullFileName);
             }
         }
 
@@ -130,5 +144,34 @@ namespace RGINPO_WinForms
                 BindingSource.Add(new Data() { X = x, Y = y });
             }
         }
+
+        private void DataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView2.Rows.Count)
+            {
+                dataGridView1.Rows.Clear();
+
+                string fileName = dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
+                string filePath = Path.Combine(_files[fileName], fileName);
+
+                List<string> fileContent = ReadFileContent(filePath);
+                AddFileContentToDataGridView1(fileContent);
+            }
+        }
+
+        /*
+        private Series CreateChartSeries(BindingSource table, string seriesName)
+        {
+            Series series = new Series(seriesName);
+            series.ChartType = SeriesChartType.Line;
+            foreach (Data dataPoint in table.List)
+            {
+                series.Points.AddXY(dataPoint.X, dataPoint.Y);
+            }
+
+            CustomChart.chart1.Series.Add(series);
+            return series;
+        }*/
+
     }
 }
