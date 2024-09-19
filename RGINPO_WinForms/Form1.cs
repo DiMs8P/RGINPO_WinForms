@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RGINPO_WinForms
@@ -24,6 +25,7 @@ namespace RGINPO_WinForms
             comboBox1.Items.Add("Draw as spine");
 
             dataGridView1.DataSource = Data;
+            Data.ListChanged += new ListChangedEventHandler(comboBox1_SelectedIndexChanged);
         }
         private void AddButton_Click(object sender, EventArgs e)
         {
