@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             dataGridView1 = new DataGridView();
             comboBox1 = new ComboBox();
             button2 = new Button();
@@ -116,10 +114,7 @@
             // chart1
             // 
             chart1.BackColor = Color.MistyRose;
-            chartArea1.Name = "ChartArea1";
-            chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            chart1.Legends.Add(legend1);
+            chart1.Enabled = false;
             chart1.Location = new Point(12, 12);
             chart1.Name = "chart1";
             chart1.Size = new Size(795, 591);

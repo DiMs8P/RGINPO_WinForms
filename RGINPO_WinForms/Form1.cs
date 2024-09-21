@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RGINPO_WinForms;
@@ -5,7 +6,7 @@ namespace RGINPO_WinForms;
 public partial class Form1 : Form
 {
     private readonly Dictionary<string, string> _files = [];
-    private readonly Dictionary<int, SeriesChartType> _drawMode = new()
+    private readonly Dictionary<int, SeriesChartType> DrawMode = new()
     {
         { 0,SeriesChartType.Line},
         { 1, SeriesChartType.Spline},
@@ -13,10 +14,30 @@ public partial class Form1 : Form
     };
     public BindingSource BindingSourceData { get; set; } = [];
 
+    void InitChart()
+    {
+        ChartArea chartArea1 = new();
+        Legend legend1 = new();
+        Series series1 = new();
+
+        chartArea1.Name = "ChartArea1";
+        legend1.Enabled = true;
+        legend1.Name = "Legend1";
+        series1.ChartArea = "ChartArea1";
+        series1.Legend = "Legend1";
+        series1.Name = "Default";
+        series1.XValueMember = "X";
+        series1.YValueMembers = "Y";
+
+        chart1.ChartAreas.Add(chartArea1);
+        chart1.Legends.Add(legend1);
+        chart1.Series.Add(series1);
+    }
+
     public Form1()
     {
         InitializeComponent();
-
+        InitChart();
         comboBox1.SelectedIndex = 0;
 
         dataGridView1.DataSource = BindingSourceData;
@@ -37,12 +58,16 @@ public partial class Form1 : Form
 
     private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        chart1.DataSource = BindingSourceData;
+        chart1.DataSource = null;
+        
+        //chart1.Series[0].ChartType = DrawMode[comboBox1.SelectedIndex];
 
         foreach (Series item in chart1.Series)
         {
-            item.ChartType = _drawMode[comboBox1.SelectedIndex];
+            item.ChartType = DrawMode[comboBox1.SelectedIndex];
         }
+
+        chart1.DataSource = BindingSourceData;
     }
 
     private void Save_Click(object sender, EventArgs e)
@@ -60,7 +85,7 @@ public partial class Form1 : Form
         }
 
         using var file = new StreamWriter(saveFileDialog1.FileName);
-        for (var i = 0; i < dataGridView1.Rows.Count - 1; i++)
+        for (var i = 0; i < dataGridView1.Rows.Count; i++)
         {
             for (var j = 0; j < dataGridView1.Columns.Count; j++)
             {
@@ -77,7 +102,7 @@ public partial class Form1 : Form
     {
         using OpenFileDialog openFileDialog = new()
         {
-            Multiselect = false,
+            Multiselect = true,
         };
         if (openFileDialog.ShowDialog() != DialogResult.OK)
         {
@@ -86,7 +111,7 @@ public partial class Form1 : Form
 
         foreach (string fullFileName in openFileDialog.FileNames)
         {
-            string directoryPath = Path.GetDirectoryName(fullFileName);
+            string directoryPath = Path.GetDirectoryName(fullFileName)!;
             string fileName = Path.GetFileName(fullFileName);
             _files.Add(fileName, directoryPath);
 
@@ -126,7 +151,7 @@ public partial class Form1 : Form
             var x = double.Parse(values[0]);
             var y = double.Parse(values[1]);
 
-            BindingSourceData.Add(new Data() { X = x, Y = y });
+            BindingSourceData.Add(new Data(x, y));
         }
     }
 
@@ -149,7 +174,7 @@ public partial class Form1 : Form
     {
         Series series = new(seriesName)
         {
-            ChartType = _drawMode[comboBox1.SelectedIndex]
+            ChartType = DrawMode[comboBox1.SelectedIndex]
         };
 
         foreach (Data dataPoint in table.List)
@@ -161,13 +186,11 @@ public partial class Form1 : Form
         return series;
     }
 
-
-
     private void button4_Click(object sender, EventArgs e)
     {
-        /*BindingSourceData.Clear();
+        BindingSourceData.Clear();
 
-        dataGridView1.Rows.Clear();
-        dataGridView2.Rows.Clear();*/
+        chart1.Series.Clear();
+        _files.Clear();
     }
 }
