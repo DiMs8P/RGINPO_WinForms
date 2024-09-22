@@ -97,6 +97,7 @@
             dataGridView2.Location = new Point(814, 191);
             dataGridView2.Margin = new Padding(4, 3, 4, 3);
             dataGridView2.Name = "dataGridView2";
+            dataGridView2.ReadOnly = true;
             dataGridView2.Size = new Size(280, 173);
             dataGridView2.TabIndex = 10;
             // 
@@ -114,9 +115,11 @@
             // chart1
             // 
             chart1.BackColor = Color.MistyRose;
+            chart1.Cursor = Cursors.Cross;
             chart1.Enabled = false;
             chart1.Location = new Point(12, 12);
             chart1.Name = "chart1";
+            chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SeaGreen;
             chart1.Size = new Size(795, 591);
             chart1.TabIndex = 12;
             chart1.Text = "chart1";

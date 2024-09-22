@@ -8,13 +8,20 @@ public partial class Form1 : Form
     private readonly Dictionary<string, string> _files = [];
     private readonly Dictionary<int, SeriesChartType> DrawMode = new()
     {
-        { 0,SeriesChartType.Line},
+        { 0, SeriesChartType.Line},
         { 1, SeriesChartType.Spline},
         {-1, SeriesChartType.ErrorBar},
     };
     public BindingSource BindingSourceData { get; set; } = [];
 
-    void InitChart()
+    public Form1()
+    {
+        InitializeComponent();
+        InitializeChart();
+        InitializeDataGridViews();
+    }
+
+    private void InitializeChart()
     {
         ChartArea chartArea1 = new();
         Legend legend1 = new();
@@ -34,12 +41,8 @@ public partial class Form1 : Form
         chart1.Series.Add(series1);
     }
 
-    public Form1()
+    private void InitializeDataGridViews()
     {
-        InitializeComponent();
-        InitChart();
-        comboBox1.SelectedIndex = 0;
-
         dataGridView1.DataSource = BindingSourceData;
         BindingSourceData.ListChanged += ComboBox1_SelectedIndexChanged;
 
@@ -49,6 +52,8 @@ public partial class Form1 : Form
         };
         dataGridView2.Columns.Add(fileNameColumn);
         dataGridView2.CellContentClick += DataGridView2_CellContentClick;
+
+        comboBox1.SelectedIndex = 0;
     }
 
     private void AddButton_Click(object sender, EventArgs e)
@@ -56,11 +61,9 @@ public partial class Form1 : Form
         BindingSourceData.Add(new Data(0, 0));
     }
 
-    private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+    private void ComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
     {
         chart1.DataSource = null;
-        
-        //chart1.Series[0].ChartType = DrawMode[comboBox1.SelectedIndex];
 
         foreach (Series item in chart1.Series)
         {
@@ -143,9 +146,10 @@ public partial class Form1 : Form
         return fileContent;
     }
 
-    private void AddFileContentToDataGridView1(IList<string> fileContent)
+    private void AddFileContentToDataGridView1(IReadOnlyList<string> fileContent)
     {
         BindingSourceData.Clear();
+
         foreach (var values in fileContent.Select(line => line.Split(' ')))
         {
             var x = double.Parse(values[0]);
@@ -155,7 +159,7 @@ public partial class Form1 : Form
         }
     }
 
-    private void DataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    private void DataGridView2_CellContentClick(object? sender, DataGridViewCellEventArgs e)
     {
         if (e.RowIndex >= 0 && e.RowIndex < dataGridView2.Rows.Count)
         {
@@ -183,6 +187,7 @@ public partial class Form1 : Form
         }
 
         chart1.Series.Add(series);
+
         return series;
     }
 
@@ -190,6 +195,7 @@ public partial class Form1 : Form
     {
         BindingSourceData.Clear();
 
+        dataGridView2.Rows.Clear();
         chart1.Series.Clear();
         _files.Clear();
     }
