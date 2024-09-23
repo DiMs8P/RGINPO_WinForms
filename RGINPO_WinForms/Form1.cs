@@ -10,7 +10,7 @@ public partial class Form1 : Form
     {
         { 0, SeriesChartType.Line},
         { 1, SeriesChartType.Spline},
-        {-1, SeriesChartType.ErrorBar},
+        {-1, SeriesChartType.Line},
     };
     public BindingSource BindingSourceData { get; set; } = [];
     public Series? CurrentSeries { get; set; } = null;
@@ -40,14 +40,16 @@ public partial class Form1 : Form
         chart1.ChartAreas.Add(chartArea1);
         chart1.Legends.Add(legend1);
         chart1.Series.Add(series1);
-        
-        CurrentSeries = series1;
     }
 
     private void InitializeDataGridViews()
     {
         dataGridView1.DataSource = BindingSourceData;
         BindingSourceData.ListChanged += BindingSourceData_ListChanged;
+        SelectSeries(chart1.Series[0]);
+        
+        AddPoint(new Data(0, 0));
+        AddPoint(new Data(1, 1));
 
         DataGridViewTextBoxColumn fileNameColumn = new()
         {
@@ -67,7 +69,7 @@ public partial class Form1 : Form
 
     private void UpdateCurrentSeries()
     {
-        CurrentSeries.Points.DataBind(BindingSourceData, "X", "Y", "");
+        CurrentSeries?.Points.DataBind(BindingSourceData, "X", "Y", "");
     }
 
     private void SelectSeries(Series series)
@@ -79,21 +81,23 @@ public partial class Form1 : Form
         
         CurrentSeries = series;
         CurrentSeries.BorderWidth = 5;
-        BindingSourceData.ListChanged -= BindingSourceData_ListChanged;
-            
-        dataGridView1.Rows.Clear();
-        BindingSourceData.Clear();
-        foreach (DataPoint point in CurrentSeries.Points)
+        UpdateBindingSource(() =>
         {
-            BindingSourceData.Add(new Data(point.XValue, point.YValues[0]));
-        }
-        
-        BindingSourceData.ListChanged += BindingSourceData_ListChanged;
+            foreach (DataPoint point in CurrentSeries.Points)
+            {
+                BindingSourceData.Add(new Data(point.XValue, point.YValues[0]));
+            }
+        });
     }
 
     private void AddButton_Click(object sender, EventArgs e)
     {
-        BindingSourceData.Add(new Data(0, 0));
+        AddPoint(new Data(0, 0));
+    }
+
+    private void AddPoint(Data data)
+    {
+        BindingSourceData.Add(data);
     }
 
     private void ComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
@@ -137,7 +141,7 @@ public partial class Form1 : Form
     {
         using OpenFileDialog openFileDialog = new()
         {
-            Multiselect = !false,
+            Multiselect = true,
         };
         if (openFileDialog.ShowDialog() != DialogResult.OK)
         {
@@ -182,22 +186,31 @@ public partial class Form1 : Form
         return fileContent;
     }
 
-    private void AddFileContentToDataGridView1(IReadOnlyList<string> fileContent)
+    private void UpdateBindingSource(Action function)
     {
         BindingSourceData.ListChanged -= BindingSourceData_ListChanged;
         dataGridView1.Rows.Clear();
         BindingSourceData.Clear();
 
-        foreach (var values in fileContent.Select(line => line.Split(' ')))
-        {
-            var x = double.Parse(values[0]);
-            var y = double.Parse(values[1]);
-
-            BindingSourceData.Add(new Data(x, y));
-        }
-
-        UpdateCurrentSeries();
+        function();
+        
         BindingSourceData.ListChanged += BindingSourceData_ListChanged;
+    }
+
+    private void AddFileContentToDataGridView1(IReadOnlyList<string> fileContent)
+    {
+        UpdateBindingSource(() =>
+        {
+            foreach (var values in fileContent.Select(line => line.Split(' ')))
+            {
+                var x = double.Parse(values[0]);
+                var y = double.Parse(values[1]);
+
+                BindingSourceData.Add(new Data(x, y));
+            }
+
+            UpdateCurrentSeries();
+        });
     }
 
     private void DataGridView2_CellContentClick(object? sender, DataGridViewCellEventArgs e)
@@ -223,9 +236,9 @@ public partial class Form1 : Form
 
     private void button4_Click(object sender, EventArgs e)
     {
-        BindingSourceData.Clear();
-
-        dataGridView2.Rows.Clear();
-        chart1.Series.Clear();
+        if (BindingSourceData.Count > 0)
+        {
+            BindingSourceData.RemoveAt(BindingSourceData.Count - 1);
+        }
     }
 }
