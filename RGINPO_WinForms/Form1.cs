@@ -20,6 +20,32 @@ public partial class Form1 : Form
         InitializeComponent();
         InitializeChart();
         InitializeDataGridViews();
+        
+        Paint += new PaintEventHandler(MyForm_Paint);
+    }
+    
+    private void MyForm_Paint(object sender, PaintEventArgs e)
+    {
+        // Используем e.Graphics для рисования
+        Graphics g = e.Graphics;
+        
+        Point[] points = {
+            new Point(0, 100),
+            new Point(50, 80),
+            new Point(100, 20),
+            new Point(150, 80),
+            new Point(200, 100)};
+
+        Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
+        g.DrawCurve(pen, points);
+
+        pen = new Pen(Color.FromArgb(255, 255, 0, 0));
+        for (int i = 0; i < points.Length - 1; ++i)
+        {
+            g.DrawLine(pen, points[i], points[i+1]);
+        }
+
+        pen.Dispose();
     }
 
     private void InitializeChart()
