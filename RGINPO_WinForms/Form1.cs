@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -20,11 +20,36 @@ public partial class Form1 : Form
         InitializeComponent();
         InitializeChart();
         InitializeDataGridViews();
+
+        Paint += new PaintEventHandler(MyForm_Paint);
+    }
+
+    private void MyForm_Paint(object sender, PaintEventArgs e)
+    {
+        Graphics g = e.Graphics;
+
+        Point[] points = {
+            new Point(0, 100),
+            new Point(50, 80),
+            new Point(100, 20),
+            new Point(150, 80),
+            new Point(200, 100)};
+
+        Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
+        g.DrawCurve(pen, points);
+
+        pen = new Pen(Color.FromArgb(255, 255, 0, 0));
+        for (int i = 0; i < points.Length - 1; ++i)
+        {
+            g.DrawLine(pen, points[i], points[i + 1]);
+        }
+
+        pen.Dispose();
     }
 
     private void InitializeChart()
     {
-        ChartArea chartArea1 = new();
+        /*ChartArea chartArea1 = new();
         Legend legend1 = new();
         Series series1 = new();
 
@@ -39,14 +64,14 @@ public partial class Form1 : Form
 
         chart1.ChartAreas.Add(chartArea1);
         chart1.Legends.Add(legend1);
-        chart1.Series.Add(series1);
+        chart1.Series.Add(series1);*/
     }
 
     private void InitializeDataGridViews()
     {
         dataGridView1.DataSource = BindingSourceData;
         BindingSourceData.ListChanged += BindingSourceData_ListChanged;
-        SelectSeries(chart1.Series[0]);
+        //SelectSeries(chart1.Series[0]);
         
         AddPoint(new Data(0, 0));
         AddPoint(new Data(1, 1));
@@ -103,10 +128,10 @@ public partial class Form1 : Form
     private void ComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
     {
         UpdateCurrentSeries();
-        foreach (Series item in chart1.Series)
+        /*foreach (Series item in chart1.Series)
         {
             item.ChartType = DrawMode[comboBox1.SelectedIndex];
-        }
+        }*/
     }
 
     private void Save_Click(object sender, EventArgs e)
@@ -148,11 +173,11 @@ public partial class Form1 : Form
             return;
         }
 
-        if (chart1.Series[0].Name == "Current")
+        /*if (chart1.Series[0].Name == "Current")
         {
             chart1.Series.Clear();
             CurrentSeries = null;
-        }
+        }*/
 
         foreach (string fullFileName in openFileDialog.FileNames)
         {
@@ -219,7 +244,7 @@ public partial class Form1 : Form
         {
             string fileName = dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
 
-            SelectSeries(chart1.Series[fileName]);
+            //SelectSeries(chart1.Series[fileName]);
         }
     }
 
@@ -230,7 +255,7 @@ public partial class Form1 : Form
             ChartType = DrawMode[comboBox1.SelectedIndex]
         };
 
-        chart1.Series.Add(series);
+        //chart1.Series.Add(series);
         return series;
     }
 
