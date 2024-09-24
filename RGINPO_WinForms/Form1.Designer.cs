@@ -38,6 +38,7 @@
             chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)chart1).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
@@ -111,11 +112,24 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // chart1
+            // 
+            chart1.BackColor = Color.MistyRose;
+            chart1.Cursor = Cursors.Cross;
+            chart1.Enabled = false;
+            chart1.Location = new Point(12, 12);
+            chart1.Name = "chart1";
+            chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SeaGreen;
+            chart1.Size = new Size(795, 591);
+            chart1.TabIndex = 12;
+            chart1.Text = "chart1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1107, 614);
+            Controls.Add(chart1);
             Controls.Add(button4);
             Controls.Add(dataGridView2);
             Controls.Add(button3);
@@ -128,6 +142,7 @@
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)chart1).EndInit();
             ResumeLayout(false);
         }
 
