@@ -2,7 +2,8 @@
 
 public class Chart : Panel
 {
-    private const int ScrollFactor = 10;
+    private const float MinSize = 0.1f;
+    private const float MaxSize = 100.0f;
     
     private Rectangle _drawingArea;
     private Rectangle _componentArea;
@@ -13,11 +14,6 @@ public class Chart : Panel
 
     public Rectangle DrawingArea => _drawingArea;
     public Rectangle ComponentArea => _componentArea;
-
-    public Chart()
-    {
-
-    }
 
     public void Initialize()
     {
@@ -31,8 +27,8 @@ public class Chart : Panel
         _drawingArea = new Rectangle(new PointF(0, 0), new PointF(50, 50));
 
         _componentArea = new Rectangle(
-            new PointF(Location.X, Location.Y + Size.Height), 
-            new PointF(Location.X + Size.Width, Location.Y)
+            new PointF(0, Size.Height), 
+            new PointF(Size.Width, 0)
         );
 
         OnDrawAreaChanged?.Invoke(_drawingArea);
@@ -42,16 +38,36 @@ public class Chart : Panel
     {
         MouseWheel += OnScroll_Handle;
         KeyDown += OnKeyDown_Handle;
+        Paint += OnPaint_Handle;
+    }
+
+    private void OnPaint_Handle(object? sender, PaintEventArgs e)
+    {
+        /*PointF leftCenterPoint = new PointF(0, 25);
+        PointF rightCenterPoint = new PointF(50, 25);
+        
+        Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
+        e.Graphics.DrawLine(pen, TranslatePointFromDrawAriaToApplicationArea(leftCenterPoint), TranslatePointFromDrawAriaToApplicationArea(rightCenterPoint));*/
     }
 
     private void BindToCustomEvents()
     {
-        _keyActions.Add(Keys.F, OnZoom_Handle);
+        _keyActions.Add(Keys.F, OnFocus_Handle);
+        OnDrawAreaChanged += (Rectangle r) => Invalidate();
     }
 
     private void OnScroll_Handle(object? sender, MouseEventArgs e)
     {
         int direction = e.Delta > 0 ? 1 : -1;
+        if (direction > 0 && (_drawingArea.Height < MinSize || _drawingArea.Width < MinSize))
+        {
+            return;
+        }
+
+        if (direction < 0 && (_drawingArea.Height > MaxSize || _drawingArea.Width > MaxSize))
+        {
+            return;
+        }
 
         Point inputPoint = e.Location;
 
@@ -62,20 +78,20 @@ public class Chart : Panel
 
         float leftCoefficient = leftLength / _componentArea.Width;
         float rightCoefficient = rightLength / _componentArea.Width;
-        float bottomCoefficient = bottomLength / _componentArea.Height;
-        float topCoefficient = topLength / _componentArea.Height;
+        float bottomCoefficient = bottomLength / -_componentArea.Height;
+        float topCoefficient = topLength / -_componentArea.Height;
 
+        float scrollFactor = (_drawingArea.RightTop.X - _drawingArea.LeftBottom.X) / 10.0f;
+        PointF leftPoint = new(_drawingArea.LeftBottom.X + direction * leftCoefficient * scrollFactor,
+                               _drawingArea.LeftBottom.Y + direction * bottomCoefficient * scrollFactor);
 
-        PointF leftPoint = new(_drawingArea.LeftBottom.X + direction * leftCoefficient * ScrollFactor,
-                               _drawingArea.LeftBottom.Y + direction * bottomCoefficient * ScrollFactor);
-
-        PointF rightPoint = new(_drawingArea.RightTop.X - direction * rightCoefficient * ScrollFactor,
-                                _drawingArea.RightTop.Y - direction * topCoefficient * ScrollFactor);
+        PointF rightPoint = new(_drawingArea.RightTop.X - direction * rightCoefficient * scrollFactor,
+                                _drawingArea.RightTop.Y - direction * topCoefficient * scrollFactor);
 
         _drawingArea.LeftBottom = leftPoint;
         _drawingArea.RightTop = rightPoint;
 
-        OnDrawAreaChanged(_drawingArea);
+        OnDrawAreaChanged?.Invoke(_drawingArea);
     }
     
     private void OnKeyDown_Handle(object? sender, KeyEventArgs e)
@@ -86,8 +102,16 @@ public class Chart : Panel
         }
     }
     
-    private void OnZoom_Handle(object? sender, KeyEventArgs e)
+    private void OnFocus_Handle(object? sender, KeyEventArgs e)
     {
         
+    }
+
+    private Point TranslatePointFromDrawAriaToApplicationArea(PointF point)
+    {
+        float coefficientX = (point.X - _drawingArea.LeftBottom.X) / _drawingArea.Width;
+        float coefficientY = (point.Y - _drawingArea.LeftBottom.Y) / _drawingArea.Height;
+        
+        return new Point((int)(_componentArea.LeftBottom.X + _componentArea.Width * coefficientX), (int)(_componentArea.RightTop.Y - _componentArea.Height * (1 - coefficientY)));
     }
 }
