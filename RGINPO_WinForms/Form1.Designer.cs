@@ -36,8 +36,11 @@
             dataGridView2 = new DataGridView();
             button4 = new Button();
             myChart1 = new Chart();
+            textBox2 = new TextBox();
+            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            myChart1.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
@@ -114,11 +117,27 @@
             // myChart1
             // 
             myChart1.BackColor = SystemColors.GradientInactiveCaption;
+            myChart1.Controls.Add(textBox2);
+            myChart1.Controls.Add(textBox1);
             myChart1.Location = new Point(12, 12);
             myChart1.Name = "myChart1";
             myChart1.Size = new Size(795, 590);
             myChart1.TabIndex = 12;
             myChart1.Paint += MyForm_Paint;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(538, 15);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(247, 23);
+            textBox2.TabIndex = 1;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(13, 547);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(354, 23);
+            textBox1.TabIndex = 0;
             // 
             // Form1
             // 
@@ -138,8 +157,11 @@
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            myChart1.ResumeLayout(false);
+            myChart1.PerformLayout();
             ResumeLayout(false);
         }
+
 
         #endregion
 
@@ -151,5 +173,7 @@
         private DataGridView dataGridView2;
         private Button button4;
         private Chart myChart1;
+        private TextBox textBox2;
+        private TextBox textBox1;
     }
 }

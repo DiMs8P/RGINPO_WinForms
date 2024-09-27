@@ -20,6 +20,18 @@ public partial class Form1 : Form
         InitializeComponent();
         InitializeChart();
         InitializeDataGridViews();
+
+        myChart1.Initialize();
+
+        Func(myChart1.DrawingArea);
+
+        myChart1.OnDrawAreaChanged += Func;
+    }
+
+    private void Func(Rectangle rectangle) 
+    {
+        textBox1.Text = $"{rectangle.LeftBottom.X};{rectangle.LeftBottom.Y}";
+        textBox2.Text = $"{rectangle.RightTop.X};{rectangle.RightTop.Y}";
     }
 
     private void MyForm_Paint(object sender, PaintEventArgs e)
@@ -70,7 +82,7 @@ public partial class Form1 : Form
         dataGridView1.DataSource = BindingSourceData;
         BindingSourceData.ListChanged += BindingSourceData_ListChanged;
         //SelectSeries(chart1.Series[0]);
-        
+
         AddPoint(new Data(0, 0));
         AddPoint(new Data(1, 1));
 
@@ -101,7 +113,7 @@ public partial class Form1 : Form
         {
             CurrentSeries.BorderWidth = 1;
         }
-        
+
         CurrentSeries = series;
         CurrentSeries.BorderWidth = 5;
         UpdateBindingSource(() =>
@@ -216,7 +228,7 @@ public partial class Form1 : Form
         BindingSourceData.Clear();
 
         function();
-        
+
         BindingSourceData.ListChanged += BindingSourceData_ListChanged;
     }
 
