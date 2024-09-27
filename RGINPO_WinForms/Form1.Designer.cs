@@ -35,6 +35,7 @@
             button3 = new Button();
             dataGridView2 = new DataGridView();
             button4 = new Button();
+            myChart1 = new Chart();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
@@ -110,11 +111,21 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // myChart1
+            // 
+            myChart1.BackColor = SystemColors.GradientInactiveCaption;
+            myChart1.Location = new Point(12, 12);
+            myChart1.Name = "myChart1";
+            myChart1.Size = new Size(795, 590);
+            myChart1.TabIndex = 12;
+            myChart1.Paint += MyForm_Paint;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1107, 614);
+            Controls.Add(myChart1);
             Controls.Add(button4);
             Controls.Add(dataGridView2);
             Controls.Add(button3);
@@ -139,5 +150,6 @@
         private Button button3;
         private DataGridView dataGridView2;
         private Button button4;
+        private Chart myChart1;
     }
 }

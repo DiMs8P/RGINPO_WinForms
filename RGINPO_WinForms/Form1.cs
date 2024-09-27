@@ -20,8 +20,6 @@ public partial class Form1 : Form
         InitializeComponent();
         InitializeChart();
         InitializeDataGridViews();
-
-        Paint += new PaintEventHandler(MyForm_Paint);
     }
 
     private void MyForm_Paint(object sender, PaintEventArgs e)
