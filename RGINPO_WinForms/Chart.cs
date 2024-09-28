@@ -11,6 +11,7 @@ public class Chart : Panel
     private const float MinSize = 0.0001f;
     private const float MaxSize = 1000000.0f;
     private static readonly double[] Coefficients = new double[] { 2, 2.5, 2 };
+    private const double MouseSensitivity = 0.01;
 
     private Rectangle _drawingArea;
     private Rectangle _componentArea;
@@ -31,6 +32,8 @@ public class Chart : Panel
     private double _drawStep = 5;
 
     private int _scaleIndex = 2;
+    private Point _lastMousePosition;
+    
     private int ScaleIndex
     {
         get => _scaleIndex;
@@ -73,6 +76,7 @@ public class Chart : Panel
     private void BindToComponentEvents()
     {
         MouseWheel += OnScroll_Handle;
+        MouseMove += OnMouseMove_Handle;
         KeyDown += OnKeyDown_Handle;
         Paint += OnPaint_Handle;
     }
@@ -155,6 +159,25 @@ public class Chart : Panel
             _drawStep /= Coefficients[ScaleIndex];
         }
     }
+    
+    private void OnMouseMove_Handle(object? sender, MouseEventArgs e)
+    {
+        if (MouseButtons.HasFlag(MouseButtons.Left))
+        {
+            var dx = _lastMousePosition.X - e.X;
+            var dy = e.Y - _lastMousePosition.Y;
+
+            Data offset = new Data(dx, dy);
+
+            _drawingArea.LeftBottom += offset * _drawStep * MouseSensitivity;
+            _drawingArea.RightTop += offset * _drawStep * MouseSensitivity;
+            
+            OnDrawAreaChanged?.Invoke(_drawingArea);
+            Invalidate();
+        }
+        
+        _lastMousePosition = e.Location;
+    }
 
     private void OnKeyDown_Handle(object? sender, KeyEventArgs e)
     {
@@ -197,14 +220,12 @@ public class Chart : Panel
             }
         };
 
-
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add: subscribe(e.NewItems); break;
             case NotifyCollectionChangedAction.Remove: unSubscribe(e.OldItems); break;
             case NotifyCollectionChangedAction.Replace: unSubscribe(e.OldItems); subscribe(e.NewItems); break;
             case NotifyCollectionChangedAction.Reset: unSubscribe(e.OldItems); break;
-            default: break;
         }
 
         Invalidate();

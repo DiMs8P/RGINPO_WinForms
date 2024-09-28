@@ -11,4 +11,14 @@ public class Data
         X = x;
         Y = y;
     }
+    
+    public static Data operator +(Data data1, Data data2)
+    {
+        return new Data(data1.X + data2.X, data1.Y + data2.Y);
+    }
+    
+    public static Data operator *(Data data1, double factor)
+    {
+        return new Data(data1.X * factor, data1.Y * factor);
+    }
 };
