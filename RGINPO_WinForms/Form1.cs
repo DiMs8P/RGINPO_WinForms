@@ -18,14 +18,6 @@ public partial class Form1 : Form
         InitializeComponent();
         InitializeChart();
         InitializeDataGridViews();
-
-        Func(chart1.DrawingArea);
-    }
-
-    private void Func(Rectangle rectangle)
-    {
-        textBox1.Text = $"{rectangle.LeftBottom.X};{rectangle.LeftBottom.Y}";
-        textBox2.Text = $"{rectangle.RightTop.X};{rectangle.RightTop.Y}";
     }
 
     private void InitializeChart()
@@ -39,7 +31,6 @@ public partial class Form1 : Form
 
         chart1.Initialize();
 
-        chart1.OnDrawAreaChanged += Func;
         chart1.Series.Add(CurrentSeries);
     }
 

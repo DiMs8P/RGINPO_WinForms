@@ -2,38 +2,33 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Collections;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RGINPO_WinForms;
 
 public class Chart : Panel
 {
-    private const float MinSize = 0.0001f;
-    private const float MaxSize = 1000000.0f;
-    private static readonly double[] Coefficients = new double[] { 2, 2.5, 2 };
+    public ObservableCollection<Series2D> Series = [];
+    public event Action<Rectangle> OnDrawAreaChanged = null!;
+
+    private const float MinSize = 0.001f;
+    private const float MaxSize = 1000.0f;
     private const double MouseSensitivity = 0.01;
+   
+    private static readonly double[] Coefficients = [2, 2.5, 2];
+
+    private int _scaleIndex = 2;
+    private double _drawStep = 5;
 
     private Rectangle _drawingArea;
     private Rectangle _componentArea;
+    private Point _lastMousePosition;
 
     private readonly XAxis _xAxis = new();
     private readonly YAxis _yAxis = new();
-    
-    private readonly Dictionary<Keys, Action<object?, KeyEventArgs>> _keyActions = [];
     private readonly Drawer _drawer = new();
-
-    public ObservableCollection<Series2D> Series = [];
-
-    public event Action<Rectangle> OnDrawAreaChanged = null!;
 
     public Rectangle DrawingArea => _drawingArea;
     public Rectangle ComponentArea => _componentArea;
-    
-    private double _drawStep = 5;
-
-    private int _scaleIndex = 2;
-    private Point _lastMousePosition;
-    
     private int ScaleIndex
     {
         get => _scaleIndex;
@@ -77,7 +72,6 @@ public class Chart : Panel
     {
         MouseWheel += OnScroll_Handle;
         MouseMove += OnMouseMove_Handle;
-        KeyDown += OnKeyDown_Handle;
         Paint += OnPaint_Handle;
     }
 
@@ -101,7 +95,6 @@ public class Chart : Panel
 
     private void BindToCustomEvents()
     {
-        _keyActions.Add(Keys.F, OnFocus_Handle);
         OnDrawAreaChanged += (Rectangle r) => Invalidate();
 
         Series.CollectionChanged += OnCollectionChanged_Handle;
@@ -167,7 +160,7 @@ public class Chart : Panel
             var dx = _lastMousePosition.X - e.X;
             var dy = e.Y - _lastMousePosition.Y;
 
-            Data offset = new Data(dx, dy);
+            Data offset = new(dx, dy);
 
             _drawingArea.LeftBottom += offset * _drawStep * MouseSensitivity;
             _drawingArea.RightTop += offset * _drawStep * MouseSensitivity;
@@ -176,20 +169,6 @@ public class Chart : Panel
         }
         _lastMousePosition = e.Location;
     }
-
-    private void OnKeyDown_Handle(object? sender, KeyEventArgs e)
-    {
-        if (_keyActions.TryGetValue(e.KeyCode, out var action))
-        {
-            action(sender, e);
-        }
-    }
-
-    private void OnFocus_Handle(object? sender, KeyEventArgs e)
-    {
-
-    }
-
     private void OnCollectionChanged_Handle(object? sender, NotifyCollectionChangedEventArgs e)
     {
         var subscribe = (IList? items) =>
