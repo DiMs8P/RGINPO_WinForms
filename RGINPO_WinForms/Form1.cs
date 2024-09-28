@@ -5,11 +5,10 @@ namespace RGINPO_WinForms;
 
 public partial class Form1 : Form
 {
-    private readonly Dictionary<int, SeriesChartType> DrawMode = new()
+    private readonly Dictionary<int, ChartType> DrawMode = new()
     {
-        { 0, SeriesChartType.Line},
-        { 1, SeriesChartType.Spline},
-        {-1, SeriesChartType.Line},
+        { 0, ChartType.Line},
+        { 1, ChartType.Spline},
     };
     public BindingSource BindingSourceData { get; set; } = [];
     public Series2D CurrentSeries { get; set; }
@@ -104,10 +103,11 @@ public partial class Form1 : Form
     private void ComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
     {
         UpdateCurrentSeries();
-        /*foreach (Series item in chart1.Series)
+        
+        foreach (Series2D item in chart1.Series)
         {
             item.ChartType = DrawMode[comboBox1.SelectedIndex];
-        }*/
+        }
     }
 
     private void Save_Click(object sender, EventArgs e)
@@ -246,6 +246,10 @@ public partial class Form1 : Form
 
     private void MouseMove_Handler(object sender, MouseEventArgs e)
     {
-        textBox3.Text = e.Location.ToString();
+        Data point = new(e.Location.X, e.Location.Y);
+        
+        Point resultPoint = UtilsLibrary.TranslatePointFromApplicationAreaToDrawArea(point, chart1.DrawingArea, chart1.ComponentArea);
+
+        textBox3.Text = $"X:{resultPoint.X}, Y:{resultPoint.Y}";
     }
 }

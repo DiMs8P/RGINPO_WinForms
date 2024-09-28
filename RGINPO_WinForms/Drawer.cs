@@ -23,9 +23,14 @@ public class Drawer
     public void DrawLine(Data point1, Data point2, Color color, Int32 borderWidth)
     {
         _drawer?.DrawLine(new Pen(color, borderWidth), 
-            UtilsLibrary.TranslatePointFromDrawAriaToApplicationArea(point1, _drawingArea, _componentArea),
-            UtilsLibrary.TranslatePointFromDrawAriaToApplicationArea(point2, _drawingArea, _componentArea)
+            UtilsLibrary.TranslatePointFromDrawAreaToApplicationArea(point1, _drawingArea, _componentArea),
+            UtilsLibrary.TranslatePointFromDrawAreaToApplicationArea(point2, _drawingArea, _componentArea)
         );
+    }
+
+    public void DrawSpline(Data[] points, Color color, Int32 borderWidth)
+    {
+        _drawer?.DrawCurve(new Pen(color, borderWidth), TranslatePointsFromDrawAriaToApplicationArea(points));
     }
 
     public void EndDraw()
@@ -38,7 +43,7 @@ public class Drawer
         IList<Point> result = [];
         foreach (var point in points)
         {
-            result.Add(UtilsLibrary.TranslatePointFromDrawAriaToApplicationArea(point, _drawingArea, _componentArea));
+            result.Add(UtilsLibrary.TranslatePointFromDrawAreaToApplicationArea(point, _drawingArea, _componentArea));
         }
 
         return [.. result];

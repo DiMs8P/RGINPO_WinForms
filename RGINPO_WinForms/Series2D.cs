@@ -8,10 +8,9 @@ public class Series2D : INotifyPropertyChanged
     private Data[] _points = [];
     private Color _color = Color.Black;
     private int _borderWidth = 1;
+    private ChartType _chartType;
 
     private readonly string _name;
-    
-    public Series2D this[string name] => this[name];
 
     public Data[] Points
     {
@@ -36,10 +35,20 @@ public class Series2D : INotifyPropertyChanged
     public int BorderWidth
     {
         get => _borderWidth;
-        set 
+        set
         {
             _borderWidth = value;
             OnPropertyChanged(nameof(BorderWidth));
+        }
+    }
+
+    public ChartType ChartType
+    {
+        get => _chartType;
+        set
+        {
+            _chartType = value;
+            OnPropertyChanged(nameof(ChartType));
         }
     }
 
@@ -59,6 +68,13 @@ public class Series2D : INotifyPropertyChanged
 
     public void Draw(Drawer drawer)
     {
-        drawer.DrawLines(Points, Color, BorderWidth);
+        if (ChartType is ChartType.Line)
+        {
+            drawer.DrawLines(Points, Color, BorderWidth);
+        }
+        else
+        {
+            drawer.DrawSpline(Points, Color, BorderWidth);
+        }
     }
 }

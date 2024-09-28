@@ -173,9 +173,7 @@ public class Chart : Panel
             _drawingArea.RightTop += offset * _drawStep * MouseSensitivity;
             
             OnDrawAreaChanged?.Invoke(_drawingArea);
-            Invalidate();
         }
-        
         _lastMousePosition = e.Location;
     }
 
