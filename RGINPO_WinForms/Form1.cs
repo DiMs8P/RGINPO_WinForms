@@ -46,8 +46,13 @@ public partial class Form1 : Form
         {
             HeaderText = "File name"
         };
+        DataGridViewTextBoxColumn colorColum = new()
+        {
+            HeaderText = "Color"
+        };
         dataGridView2.Columns.Add(fileNameColumn);
-        dataGridView2.CellContentClick += DataGridView2_CellContentClick;
+        dataGridView2.Columns.Add(colorColum);
+        dataGridView2.CellClick += DataGridView2_CellContentClick;
 
         comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
         comboBox1.SelectedIndex = 0;
@@ -67,11 +72,12 @@ public partial class Form1 : Form
     {
         if (CurrentSeries is not null)
         {
-            CurrentSeries.BorderWidth = 1;
+            CurrentSeries.BorderWidth = 3;
         }
 
         CurrentSeries = series;
         CurrentSeries.BorderWidth = 5;
+        
         UpdateBindingSource(() =>
         {
             foreach (Data point in CurrentSeries.Points)
@@ -94,7 +100,7 @@ public partial class Form1 : Form
     private void ComboBox1_SelectedIndexChanged(object? sender, EventArgs e)
     {
         UpdateCurrentSeries();
-        
+
         foreach (Series2D item in chart1.Series)
         {
             item.ChartType = DrawMode[comboBox1.SelectedIndex];
@@ -154,6 +160,8 @@ public partial class Form1 : Form
             var fileContent = ReadFileContent(fullFileName);
             SelectSeries(CreateChartSeries(fileName));
             AddFileContentToDataGridView1(fileContent);
+            
+            dataGridView2.Rows[^1].Cells[1].Style.BackColor = CurrentSeries!.Color;
         }
     }
 
@@ -213,13 +221,24 @@ public partial class Form1 : Form
 
             SelectSeries(chart1.Series.FindByName(fileName!));
         }
+
+        if (e.RowIndex>= 0 && e.RowIndex < dataGridView2.Rows.Count && e.ColumnIndex == 1)
+        {            
+            dataGridView2.Rows[e.RowIndex].Cells[1].Selected = false;
+
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                CurrentSeries.Color = colorDialog1.Color;
+                dataGridView2.Rows[e.RowIndex].Cells[1].Style.BackColor = colorDialog1.Color;
+            }
+        }
     }
 
     private Series2D CreateChartSeries(string seriesName)
     {
         Series2D series = new(seriesName)
         {
-            // ChartType = DrawMode[comboBox1.SelectedIndex]
+            ChartType = DrawMode[comboBox1.SelectedIndex]
         };
 
         chart1.Series.Add(series);
@@ -238,7 +257,7 @@ public partial class Form1 : Form
     private void MouseMove_Handler(object sender, MouseEventArgs e)
     {
         Data point = new(e.Location.X, e.Location.Y);
-        
+
         Point resultPoint = UtilsLibrary.TranslatePointFromApplicationAreaToDrawArea(point, chart1.DrawingArea, chart1.ComponentArea);
 
         textBox3.Text = $"X:{resultPoint.X}, Y:{resultPoint.Y}";

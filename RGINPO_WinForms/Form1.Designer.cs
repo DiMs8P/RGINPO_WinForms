@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             dataGridView1 = new DataGridView();
             comboBox1 = new ComboBox();
             button2 = new Button();
@@ -37,6 +38,7 @@
             button4 = new Button();
             chart1 = new Chart();
             textBox3 = new TextBox();
+            colorDialog1 = new ColorDialog();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
@@ -46,97 +48,71 @@
             dataGridView1.BackgroundColor = SystemColors.ButtonFace;
             dataGridView1.BorderStyle = BorderStyle.None;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(814, 12);
-            dataGridView1.Margin = new Padding(4, 3, 4, 3);
+            resources.ApplyResources(dataGridView1, "dataGridView1");
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(280, 173);
-            dataGridView1.TabIndex = 0;
             // 
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "DrawLine", "DrawSpline" });
-            comboBox1.Location = new Point(814, 399);
+            comboBox1.Items.AddRange(new object[] { resources.GetString("comboBox1.Items"), resources.GetString("comboBox1.Items1") });
+            resources.ApplyResources(comboBox1, "comboBox1");
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 23);
-            comboBox1.TabIndex = 6;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             // 
             // button2
             // 
-            button2.Location = new Point(1019, 551);
+            resources.ApplyResources(button2, "button2");
             button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 8;
-            button2.Text = "Load";
             button2.UseVisualStyleBackColor = true;
             button2.Click += Load_Click;
             // 
             // button1
             // 
-            button1.Location = new Point(1019, 580);
+            resources.ApplyResources(button1, "button1");
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 9;
-            button1.Text = "Save";
             button1.UseVisualStyleBackColor = true;
             button1.Click += Save_Click;
             // 
             // button3
             // 
-            button3.Location = new Point(1006, 399);
-            button3.Margin = new Padding(4, 3, 4, 3);
+            resources.ApplyResources(button3, "button3");
             button3.Name = "button3";
-            button3.Size = new Size(88, 27);
-            button3.TabIndex = 1;
-            button3.Text = "Add";
             button3.UseVisualStyleBackColor = true;
             button3.Click += AddButton_Click;
             // 
             // dataGridView2
             // 
+            dataGridView2.AllowUserToAddRows = false;
             dataGridView2.BackgroundColor = SystemColors.ButtonFace;
             dataGridView2.BorderStyle = BorderStyle.None;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(814, 191);
-            dataGridView2.Margin = new Padding(4, 3, 4, 3);
+            resources.ApplyResources(dataGridView2, "dataGridView2");
             dataGridView2.Name = "dataGridView2";
             dataGridView2.ReadOnly = true;
-            dataGridView2.Size = new Size(280, 173);
-            dataGridView2.TabIndex = 10;
             // 
             // button4
             // 
-            button4.Location = new Point(1006, 432);
-            button4.Margin = new Padding(4, 3, 4, 3);
+            resources.ApplyResources(button4, "button4");
             button4.Name = "button4";
-            button4.Size = new Size(88, 27);
-            button4.TabIndex = 11;
-            button4.Text = "Remove";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
             // chart1
             // 
             chart1.BackColor = SystemColors.GradientInactiveCaption;
-            chart1.Location = new Point(10, 12);
+            resources.ApplyResources(chart1, "chart1");
             chart1.Name = "chart1";
-            chart1.Size = new Size(797, 590);
-            chart1.TabIndex = 12;
             chart1.MouseMove += MouseMove_Handler;
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(818, 565);
+            resources.ApplyResources(textBox3, "textBox3");
             textBox3.Name = "textBox3";
-            textBox3.Size = new Size(137, 23);
-            textBox3.TabIndex = 13;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1107, 614);
             Controls.Add(textBox3);
             Controls.Add(chart1);
             Controls.Add(button4);
@@ -146,9 +122,9 @@
             Controls.Add(button2);
             Controls.Add(comboBox1);
             Controls.Add(dataGridView1);
-            Margin = new Padding(4, 3, 4, 3);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
             Name = "Form1";
-            Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);
@@ -167,5 +143,6 @@
         private Button button4;
         private Chart chart1;
         private TextBox textBox3;
+        private ColorDialog colorDialog1;
     }
 }

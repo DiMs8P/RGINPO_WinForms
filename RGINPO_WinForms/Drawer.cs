@@ -1,6 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-
-namespace RGINPO_WinForms;
+﻿namespace RGINPO_WinForms;
 
 public class Drawer
 {
