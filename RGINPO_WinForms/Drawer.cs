@@ -23,8 +23,8 @@ public class Drawer
     public void DrawLine(Data point1, Data point2, Color color, Int32 borderWidth)
     {
         _drawer?.DrawLine(new Pen(color, borderWidth), 
-                        CoordinateTranslator.TranslatePointFromDrawAriaToApplicationArea(point1, _drawingArea, _componentArea),
-                        CoordinateTranslator.TranslatePointFromDrawAriaToApplicationArea(point2, _drawingArea, _componentArea)
+            UtilsLibrary.TranslatePointFromDrawAriaToApplicationArea(point1, _drawingArea, _componentArea),
+            UtilsLibrary.TranslatePointFromDrawAriaToApplicationArea(point2, _drawingArea, _componentArea)
         );
     }
 
@@ -36,10 +36,9 @@ public class Drawer
     private Point[] TranslatePointsFromDrawAriaToApplicationArea(Data[] points)
     {
         IList<Point> result = [];
-
         foreach (var point in points)
         {
-            result.Add(CoordinateTranslator.TranslatePointFromDrawAriaToApplicationArea(point, _drawingArea, _componentArea));
+            result.Add(UtilsLibrary.TranslatePointFromDrawAriaToApplicationArea(point, _drawingArea, _componentArea));
         }
 
         return [.. result];

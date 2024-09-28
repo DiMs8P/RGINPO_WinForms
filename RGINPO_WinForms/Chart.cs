@@ -8,8 +8,9 @@ namespace RGINPO_WinForms;
 
 public class Chart : Panel
 {
-    private const float MinSize = 0.1f;
-    private const float MaxSize = 100.0f;
+    private const float MinSize = 0.0001f;
+    private const float MaxSize = 1000000.0f;
+    private static readonly double[] Coefficients = new double[] { 2, 2.5, 2 };
 
     private Rectangle _drawingArea;
     private Rectangle _componentArea;
@@ -26,6 +27,29 @@ public class Chart : Panel
 
     public Rectangle DrawingArea => _drawingArea;
     public Rectangle ComponentArea => _componentArea;
+    
+    private double _drawStep = 5;
+
+    private int _scaleIndex = 2;
+    private int ScaleIndex
+    {
+        get => _scaleIndex;
+        set
+        {
+            if (value >= Coefficients.Length)
+            {
+                _scaleIndex = 0;
+            } 
+            else if (value < 0)
+            {
+                _scaleIndex = Coefficients.Length - 1;
+            }
+            else
+            {
+                _scaleIndex = value;
+            }
+        }
+    }
 
     public void Initialize()
     {
@@ -65,8 +89,8 @@ public class Chart : Panel
             series.Draw(_drawer);
         }
 
-        _xAxis.Draw(_drawer, 1d);
-        _yAxis.Draw(_drawer, 1d);
+        _xAxis.Draw(_drawer, _drawStep);
+        _yAxis.Draw(_drawer, _drawStep);
 
         _drawer.EndDraw();
     }
@@ -113,7 +137,23 @@ public class Chart : Panel
         _drawingArea.LeftBottom = leftPoint;
         _drawingArea.RightTop = rightPoint;
 
+        UpdateDrawStep();
         OnDrawAreaChanged?.Invoke(_drawingArea);
+    }
+
+    private void UpdateDrawStep()
+    {
+        int numOfSegments = (int)(_drawingArea.Width / _drawStep) + 1;
+        if (numOfSegments > 20)
+        {
+            ++ScaleIndex;
+            _drawStep *= Coefficients[ScaleIndex];
+        }
+        else if (numOfSegments < 7)
+        {
+            --ScaleIndex;
+            _drawStep /= Coefficients[ScaleIndex];
+        }
     }
 
     private void OnKeyDown_Handle(object? sender, KeyEventArgs e)

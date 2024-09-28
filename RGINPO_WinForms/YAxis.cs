@@ -6,9 +6,10 @@ public class YAxis : IAxis
 
     public void Draw(Drawer drawer, double step)
     {
-        double yCurrent = Bounds.LeftBottom.Y;
+        double start = UtilsLibrary.RoundUpToPrecision(Bounds.LeftBottom.Y, step);
+        double yCurrent = start;
+        
         int i = 1;
-
         while (yCurrent < Bounds.RightTop.Y)
         {
             Data point1 = new(Bounds.LeftBottom.X, yCurrent);
@@ -16,7 +17,7 @@ public class YAxis : IAxis
 
             drawer.DrawLine(point1, point2, Color.FromArgb(128, Color.Black), 1);
 
-            yCurrent = Bounds.LeftBottom.Y + i * step;
+            yCurrent = start + i * step;
             ++i;
         }
     }
