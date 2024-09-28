@@ -5,13 +5,15 @@ namespace RGINPO_WinForms;
 
 public class Series2D : INotifyPropertyChanged
 {
-    private PointF[] _points = [];
+    private Data[] _points = [];
     private Color _color = Color.Black;
     private int _borderWidth = 1;
 
     private readonly string _name;
+    
+    public Series2D this[string name] => this[name];
 
-    public PointF[] Points
+    public Data[] Points
     {
         get => _points;
         set

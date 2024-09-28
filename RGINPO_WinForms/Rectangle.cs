@@ -2,14 +2,14 @@
 
 public struct Rectangle
 {
-    public PointF LeftBottom { get; set; }
-    public PointF RightTop { get; set; }
+    public Data LeftBottom { get; set; }
+    public Data RightTop { get; set; }
 
-    public readonly float Width => RightTop.X - LeftBottom.X;
+    public readonly double Width => RightTop.X - LeftBottom.X;
 
-    public readonly float Height => RightTop.Y - LeftBottom.Y;
+    public readonly double Height => RightTop.Y - LeftBottom.Y;
 
-    public Rectangle(PointF pointLeftBottom, PointF pointRightTop)
+    public Rectangle(Data pointLeftBottom, Data pointRightTop)
     {
         LeftBottom = pointLeftBottom;
         RightTop = pointRightTop;

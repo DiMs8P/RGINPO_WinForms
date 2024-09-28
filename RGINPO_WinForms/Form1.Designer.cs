@@ -38,6 +38,7 @@
             chart1 = new Chart();
             textBox2 = new TextBox();
             textBox1 = new TextBox();
+            textBox3 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             chart1.SuspendLayout();
@@ -123,6 +124,7 @@
             chart1.Name = "chart1";
             chart1.Size = new Size(797, 590);
             chart1.TabIndex = 12;
+            chart1.MouseMove += MouseMove_Handler;
             // 
             // textBox2
             // 
@@ -138,11 +140,19 @@
             textBox1.Size = new Size(207, 23);
             textBox1.TabIndex = 0;
             // 
+            // textBox3
+            // 
+            textBox3.Location = new Point(818, 565);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(137, 23);
+            textBox3.TabIndex = 13;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1107, 614);
+            Controls.Add(textBox3);
             Controls.Add(chart1);
             Controls.Add(button4);
             Controls.Add(dataGridView2);
@@ -159,6 +169,7 @@
             chart1.ResumeLayout(false);
             chart1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
 
@@ -174,5 +185,6 @@
         private Chart chart1;
         private TextBox textBox2;
         private TextBox textBox1;
+        private TextBox textBox3;
     }
 }

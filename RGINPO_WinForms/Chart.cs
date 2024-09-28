@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Collections;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RGINPO_WinForms;
 
@@ -13,6 +14,9 @@ public class Chart : Panel
     private Rectangle _drawingArea;
     private Rectangle _componentArea;
 
+    private readonly XAxis _xAxis = new();
+    private readonly YAxis _yAxis = new();
+    
     private readonly Dictionary<Keys, Action<object?, KeyEventArgs>> _keyActions = [];
     private readonly Drawer _drawer = new();
 
@@ -32,11 +36,11 @@ public class Chart : Panel
 
     private void InitializeAreas()
     {
-        _drawingArea = new Rectangle(new PointF(0, 0), new PointF(50, 50));
+        _drawingArea = new Rectangle(new Data(0, 0), new Data(50, 50));
 
         _componentArea = new Rectangle(
-            new PointF(0, Size.Height),
-            new PointF(Size.Width, 0)
+            new Data(0, Size.Height),
+            new Data(Size.Width, 0)
         );
 
         OnDrawAreaChanged?.Invoke(_drawingArea);
@@ -51,6 +55,9 @@ public class Chart : Panel
 
     private void OnPaint_Handle(object? sender, PaintEventArgs e)
     {
+        _xAxis.SetBounds(DrawingArea);
+        _yAxis.SetBounds(DrawingArea);
+
         _drawer.BeginDraw(e.Graphics, DrawingArea, ComponentArea);
 
         foreach (var series in Series)
@@ -58,15 +65,10 @@ public class Chart : Panel
             series.Draw(_drawer);
         }
 
+        _xAxis.Draw(_drawer, 1d);
+        _yAxis.Draw(_drawer, 1d);
+
         _drawer.EndDraw();
-
-        /*
-         *PointF leftCenterPoint = new PointF(0, 25);
-            PointF rightCenterPoint = new PointF(50, 25);
-
-            Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
-            e.Graphics.DrawLine(pen, TranslatePointFromDrawAriaToApplicationArea(leftCenterPoint), TranslatePointFromDrawAriaToApplicationArea(rightCenterPoint));
-        */
     }
 
     private void BindToCustomEvents()
@@ -92,21 +94,20 @@ public class Chart : Panel
 
         Point inputPoint = e.Location;
 
-        float leftLength = inputPoint.X - _componentArea.LeftBottom.X;
-        float rightLength = _componentArea.RightTop.X - inputPoint.X;
-        float bottomLength = _componentArea.LeftBottom.Y - inputPoint.Y;
-        float topLength = inputPoint.Y - _componentArea.RightTop.Y;
+        double leftLength = inputPoint.X - _componentArea.LeftBottom.X;
+        double rightLength = _componentArea.RightTop.X - inputPoint.X;
+        double bottomLength = _componentArea.LeftBottom.Y - inputPoint.Y;
+        double topLength = inputPoint.Y - _componentArea.RightTop.Y;
 
-        float leftCoefficient = leftLength / _componentArea.Width;
-        float rightCoefficient = rightLength / _componentArea.Width;
-        float bottomCoefficient = bottomLength / -_componentArea.Height;
-        float topCoefficient = topLength / -_componentArea.Height;
-
-        float scrollFactor = (_drawingArea.RightTop.X - _drawingArea.LeftBottom.X) / 10.0f;
-        PointF leftPoint = new(_drawingArea.LeftBottom.X + direction * leftCoefficient * scrollFactor,
+        double leftCoefficient = leftLength / _componentArea.Width;
+        double rightCoefficient = rightLength / _componentArea.Width;
+        double bottomCoefficient = bottomLength / -_componentArea.Height;
+        double topCoefficient = topLength / -_componentArea.Height;
+        double scrollFactor = (_drawingArea.RightTop.X - _drawingArea.LeftBottom.X) / 10.0f;
+        Data leftPoint = new(_drawingArea.LeftBottom.X + direction * leftCoefficient * scrollFactor,
                                _drawingArea.LeftBottom.Y + direction * bottomCoefficient * scrollFactor);
 
-        PointF rightPoint = new(_drawingArea.RightTop.X - direction * rightCoefficient * scrollFactor,
+        Data rightPoint = new(_drawingArea.RightTop.X - direction * rightCoefficient * scrollFactor,
                                 _drawingArea.RightTop.Y - direction * topCoefficient * scrollFactor);
 
         _drawingArea.LeftBottom = leftPoint;

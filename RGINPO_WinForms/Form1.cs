@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RGINPO_WinForms;
@@ -13,28 +12,22 @@ public partial class Form1 : Form
         {-1, SeriesChartType.Line},
     };
     public BindingSource BindingSourceData { get; set; } = [];
-    public Series? CurrentSeries { get; set; } = null;
+    public Series2D CurrentSeries { get; set; }
 
     public Form1()
     {
-        InitializeComponent();
-        InitializeChart();
-        InitializeDataGridViews();
-
-        chart1.Initialize();
-
-        Func(chart1.DrawingArea);
-
-        chart1.OnDrawAreaChanged += Func;
-
-        Series2D series = new("Default")
+        CurrentSeries = new("Default")
         {
-            Points = [new PointF(0, 0), new PointF(50, 50)],
+            Points = [new Data(0, 0), new Data(50, 50)],
             Color = Color.Red,
             BorderWidth = 3
         };
 
-        chart1.Series.Add(series);
+        InitializeComponent();
+        InitializeChart();
+        InitializeDataGridViews();
+
+        Func(chart1.DrawingArea);
     }
 
     private void Func(Rectangle rectangle)
@@ -43,57 +36,21 @@ public partial class Form1 : Form
         textBox2.Text = $"{rectangle.RightTop.X};{rectangle.RightTop.Y}";
     }
 
-    /*private void MyForm_Paint(object sender, PaintEventArgs e)
-    {
-        Graphics g = e.Graphics;
-
-        Point[] points = {
-            new Point(0, 100),
-            new Point(50, 80),
-            new Point(100, 20),
-            new Point(150, 80),
-            new Point(200, 100)};
-
-        Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
-        g.DrawCurve(pen, points);
-
-        pen = new Pen(Color.FromArgb(255, 255, 0, 0));
-        for (int i = 0; i < points.Length - 1; ++i)
-        {
-            g.DrawLine(pen, points[i], points[i + 1]);
-        }
-
-        pen.Dispose();
-    }*/
-
     private void InitializeChart()
     {
-        /*ChartArea chartArea1 = new();
-        Legend legend1 = new();
-        Series series1 = new();
+        chart1.Initialize();
 
-        chartArea1.Name = "ChartArea1";
-        legend1.Enabled = true;
-        legend1.Name = "Legend1";
-        series1.ChartArea = "ChartArea1";
-        series1.Legend = "Legend1";
-        series1.Name = "Current";
-        series1.XValueMember = "X";
-        series1.YValueMembers = "Y";
-
-        chart1.ChartAreas.Add(chartArea1);
-        chart1.Legends.Add(legend1);
-        chart1.Series.Add(series1);*/
+        chart1.OnDrawAreaChanged += Func;
+        chart1.Series.Add(CurrentSeries);
     }
 
     private void InitializeDataGridViews()
     {
         dataGridView1.DataSource = BindingSourceData;
         BindingSourceData.ListChanged += BindingSourceData_ListChanged;
-        //SelectSeries(chart1.Series[0]);
 
         AddPoint(new Data(0, 0));
-        AddPoint(new Data(1, 1));
+        AddPoint(new Data(50, 50));
 
         DataGridViewTextBoxColumn fileNameColumn = new()
         {
@@ -113,10 +70,10 @@ public partial class Form1 : Form
 
     private void UpdateCurrentSeries()
     {
-        CurrentSeries?.Points.DataBind(BindingSourceData, "X", "Y", "");
+        CurrentSeries.Points = BindingSourceData.Cast<Data>().Select(p => new Data(p.X, p.Y)).ToArray();
     }
 
-    private void SelectSeries(Series series)
+    private void SelectSeries(Series2D series)
     {
         if (CurrentSeries is not null)
         {
@@ -127,9 +84,9 @@ public partial class Form1 : Form
         CurrentSeries.BorderWidth = 5;
         UpdateBindingSource(() =>
         {
-            foreach (DataPoint point in CurrentSeries.Points)
+            foreach (Data point in CurrentSeries.Points)
             {
-                BindingSourceData.Add(new Data(point.XValue, point.YValues[0]));
+                BindingSourceData.Add(new Data(point.X, point.Y));
             }
         });
     }
@@ -192,11 +149,11 @@ public partial class Form1 : Form
             return;
         }
 
-        /*if (chart1.Series[0].Name == "Current")
+        if (chart1.Series[0].Name == "Default")
         {
             chart1.Series.Clear();
             CurrentSeries = null;
-        }*/
+        }
 
         foreach (string fullFileName in openFileDialog.FileNames)
         {
@@ -263,18 +220,19 @@ public partial class Form1 : Form
         {
             string fileName = dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
 
-            //SelectSeries(chart1.Series[fileName]);
+            SelectSeries(chart1.Series.FindByName(fileName!));
         }
     }
 
-    private Series CreateChartSeries(string seriesName)
+    private Series2D CreateChartSeries(string seriesName)
     {
-        Series series = new(seriesName)
+        Series2D series = new(seriesName)
         {
-            ChartType = DrawMode[comboBox1.SelectedIndex]
+            // ChartType = DrawMode[comboBox1.SelectedIndex]
         };
 
-        //chart1.Series.Add(series);
+        chart1.Series.Add(series);
+
         return series;
     }
 
@@ -284,5 +242,10 @@ public partial class Form1 : Form
         {
             BindingSourceData.RemoveAt(BindingSourceData.Count - 1);
         }
+    }
+
+    private void MouseMove_Handler(object sender, MouseEventArgs e)
+    {
+        textBox3.Text = e.Location.ToString();
     }
 }
