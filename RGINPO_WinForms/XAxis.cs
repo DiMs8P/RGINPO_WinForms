@@ -21,7 +21,7 @@ public class XAxis : IAxis
         }
     }
 
-    public IAxis SetBounds(Rectangle bounds)
+    public IAxis UpdateBounds(Rectangle bounds)
     {
         Bounds = bounds;
 

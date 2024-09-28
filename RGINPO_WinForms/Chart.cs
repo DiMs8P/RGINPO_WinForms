@@ -55,8 +55,8 @@ public class Chart : Panel
 
     private void OnPaint_Handle(object? sender, PaintEventArgs e)
     {
-        _xAxis.SetBounds(DrawingArea);
-        _yAxis.SetBounds(DrawingArea);
+        _xAxis.UpdateBounds(DrawingArea);
+        _yAxis.UpdateBounds(DrawingArea);
 
         _drawer.BeginDraw(e.Graphics, DrawingArea, ComponentArea);
 

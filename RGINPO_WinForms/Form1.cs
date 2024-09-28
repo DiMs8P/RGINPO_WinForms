@@ -16,13 +16,6 @@ public partial class Form1 : Form
 
     public Form1()
     {
-        CurrentSeries = new("Default")
-        {
-            Points = [new Data(0, 0), new Data(50, 50)],
-            Color = Color.Red,
-            BorderWidth = 3
-        };
-
         InitializeComponent();
         InitializeChart();
         InitializeDataGridViews();
@@ -38,6 +31,13 @@ public partial class Form1 : Form
 
     private void InitializeChart()
     {
+        CurrentSeries = new("Default")
+        {
+            Points = [new Data(0, 0), new Data(50, 50)],
+            Color = Color.Red,
+            BorderWidth = 3
+        };
+
         chart1.Initialize();
 
         chart1.OnDrawAreaChanged += Func;

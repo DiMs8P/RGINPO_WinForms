@@ -6,5 +6,5 @@ public interface IAxis
 
     public void Draw(Drawer drawer, double step);
 
-    public IAxis SetBounds(Rectangle bounds);
+    public IAxis UpdateBounds(Rectangle bounds);
 }
