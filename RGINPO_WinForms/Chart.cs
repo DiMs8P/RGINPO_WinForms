@@ -1,14 +1,22 @@
-﻿namespace RGINPO_WinForms;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Collections;
+
+namespace RGINPO_WinForms;
 
 public class Chart : Panel
 {
     private const float MinSize = 0.1f;
     private const float MaxSize = 100.0f;
-    
+
     private Rectangle _drawingArea;
     private Rectangle _componentArea;
 
     private readonly Dictionary<Keys, Action<object?, KeyEventArgs>> _keyActions = [];
+    private readonly Drawer _drawer = new();
+
+    public ObservableCollection<Series2D> Series = [];
 
     public event Action<Rectangle> OnDrawAreaChanged = null!;
 
@@ -27,13 +35,13 @@ public class Chart : Panel
         _drawingArea = new Rectangle(new PointF(0, 0), new PointF(50, 50));
 
         _componentArea = new Rectangle(
-            new PointF(0, Size.Height), 
+            new PointF(0, Size.Height),
             new PointF(Size.Width, 0)
         );
 
         OnDrawAreaChanged?.Invoke(_drawingArea);
     }
-    
+
     private void BindToComponentEvents()
     {
         MouseWheel += OnScroll_Handle;
@@ -43,17 +51,30 @@ public class Chart : Panel
 
     private void OnPaint_Handle(object? sender, PaintEventArgs e)
     {
-        /*PointF leftCenterPoint = new PointF(0, 25);
-        PointF rightCenterPoint = new PointF(50, 25);
-        
-        Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
-        e.Graphics.DrawLine(pen, TranslatePointFromDrawAriaToApplicationArea(leftCenterPoint), TranslatePointFromDrawAriaToApplicationArea(rightCenterPoint));*/
+        _drawer.BeginDraw(e.Graphics, DrawingArea, ComponentArea);
+
+        foreach (var series in Series)
+        {
+            series.Draw(_drawer);
+        }
+
+        _drawer.EndDraw();
+
+        /*
+         *PointF leftCenterPoint = new PointF(0, 25);
+            PointF rightCenterPoint = new PointF(50, 25);
+
+            Pen pen = new Pen(Color.FromArgb(255, 0, 0, 0));
+            e.Graphics.DrawLine(pen, TranslatePointFromDrawAriaToApplicationArea(leftCenterPoint), TranslatePointFromDrawAriaToApplicationArea(rightCenterPoint));
+        */
     }
 
     private void BindToCustomEvents()
     {
         _keyActions.Add(Keys.F, OnFocus_Handle);
         OnDrawAreaChanged += (Rectangle r) => Invalidate();
+
+        Series.CollectionChanged += OnCollectionChanged_Handle;
     }
 
     private void OnScroll_Handle(object? sender, MouseEventArgs e)
@@ -93,7 +114,7 @@ public class Chart : Panel
 
         OnDrawAreaChanged?.Invoke(_drawingArea);
     }
-    
+
     private void OnKeyDown_Handle(object? sender, KeyEventArgs e)
     {
         if (_keyActions.TryGetValue(e.KeyCode, out var action))
@@ -101,17 +122,52 @@ public class Chart : Panel
             action(sender, e);
         }
     }
-    
+
     private void OnFocus_Handle(object? sender, KeyEventArgs e)
     {
-        
+
     }
 
-    private Point TranslatePointFromDrawAriaToApplicationArea(PointF point)
+    private void OnCollectionChanged_Handle(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        float coefficientX = (point.X - _drawingArea.LeftBottom.X) / _drawingArea.Width;
-        float coefficientY = (point.Y - _drawingArea.LeftBottom.Y) / _drawingArea.Height;
-        
-        return new Point((int)(_componentArea.LeftBottom.X + _componentArea.Width * coefficientX), (int)(_componentArea.RightTop.Y - _componentArea.Height * (1 - coefficientY)));
+        var subscribe = (IList? items) =>
+        {
+            if (items is null) return;
+
+            foreach (var item in items)
+            {
+                if (item is Series2D series)
+                {
+                    series.PropertyChanged += OnRenderRequest_Handle;
+                }
+            }
+        };
+
+        var unSubscribe = (IList? items) =>
+        {
+            if (items is null) return;
+
+            foreach (var item in items)
+            {
+                if (item is Series2D series)
+                {
+                    series.PropertyChanged -= OnRenderRequest_Handle;
+                }
+            }
+        };
+
+
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add: subscribe(e.NewItems); break;
+            case NotifyCollectionChangedAction.Remove: unSubscribe(e.OldItems); break;
+            case NotifyCollectionChangedAction.Replace: unSubscribe(e.OldItems); subscribe(e.NewItems); break;
+            case NotifyCollectionChangedAction.Reset: unSubscribe(e.OldItems); break;
+            default: break;
+        }
+
+        Invalidate();
     }
+
+    private void OnRenderRequest_Handle(object? sender, PropertyChangedEventArgs args) => Invalidate();
 }

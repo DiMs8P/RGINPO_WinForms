@@ -21,20 +21,29 @@ public partial class Form1 : Form
         InitializeChart();
         InitializeDataGridViews();
 
-        myChart1.Initialize();
+        chart1.Initialize();
 
-        Func(myChart1.DrawingArea);
+        Func(chart1.DrawingArea);
 
-        myChart1.OnDrawAreaChanged += Func;
+        chart1.OnDrawAreaChanged += Func;
+
+        Series2D series = new("Default")
+        {
+            Points = [new PointF(0, 0), new PointF(50, 50)],
+            Color = Color.Red,
+            BorderWidth = 3
+        };
+
+        chart1.Series.Add(series);
     }
 
-    private void Func(Rectangle rectangle) 
+    private void Func(Rectangle rectangle)
     {
         textBox1.Text = $"{rectangle.LeftBottom.X};{rectangle.LeftBottom.Y}";
         textBox2.Text = $"{rectangle.RightTop.X};{rectangle.RightTop.Y}";
     }
 
-    private void MyForm_Paint(object sender, PaintEventArgs e)
+    /*private void MyForm_Paint(object sender, PaintEventArgs e)
     {
         Graphics g = e.Graphics;
 
@@ -55,7 +64,7 @@ public partial class Form1 : Form
         }
 
         pen.Dispose();
-    }
+    }*/
 
     private void InitializeChart()
     {

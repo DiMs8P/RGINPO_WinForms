@@ -35,12 +35,12 @@
             button3 = new Button();
             dataGridView2 = new DataGridView();
             button4 = new Button();
-            myChart1 = new Chart();
+            chart1 = new Chart();
             textBox2 = new TextBox();
             textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
-            myChart1.SuspendLayout();
+            chart1.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView1
@@ -114,29 +114,28 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
-            // myChart1
+            // chart1
             // 
-            myChart1.BackColor = SystemColors.GradientInactiveCaption;
-            myChart1.Controls.Add(textBox2);
-            myChart1.Controls.Add(textBox1);
-            myChart1.Location = new Point(12, 12);
-            myChart1.Name = "myChart1";
-            myChart1.Size = new Size(795, 590);
-            myChart1.TabIndex = 12;
-            myChart1.Paint += MyForm_Paint;
+            chart1.BackColor = SystemColors.GradientInactiveCaption;
+            chart1.Controls.Add(textBox2);
+            chart1.Controls.Add(textBox1);
+            chart1.Location = new Point(10, 12);
+            chart1.Name = "chart1";
+            chart1.Size = new Size(797, 590);
+            chart1.TabIndex = 12;
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(538, 15);
+            textBox2.Location = new Point(563, 11);
             textBox2.Name = "textBox2";
-            textBox2.Size = new Size(247, 23);
+            textBox2.Size = new Size(229, 23);
             textBox2.TabIndex = 1;
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(13, 547);
+            textBox1.Location = new Point(4, 543);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(354, 23);
+            textBox1.Size = new Size(207, 23);
             textBox1.TabIndex = 0;
             // 
             // Form1
@@ -144,7 +143,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1107, 614);
-            Controls.Add(myChart1);
+            Controls.Add(chart1);
             Controls.Add(button4);
             Controls.Add(dataGridView2);
             Controls.Add(button3);
@@ -157,8 +156,8 @@
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
-            myChart1.ResumeLayout(false);
-            myChart1.PerformLayout();
+            chart1.ResumeLayout(false);
+            chart1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -172,7 +171,7 @@
         private Button button3;
         private DataGridView dataGridView2;
         private Button button4;
-        private Chart myChart1;
+        private Chart chart1;
         private TextBox textBox2;
         private TextBox textBox1;
     }
