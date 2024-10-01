@@ -1,6 +1,5 @@
-﻿using System.Windows.Forms.DataVisualization.Charting;
 
-namespace RGINPO_WinForms
+﻿namespace RGINPO_WinForms
 {
     partial class Form1
     {
@@ -28,103 +27,123 @@ namespace RGINPO_WinForms
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-
         private void InitializeComponent()
         {
-            ChartArea chartArea1 = new ChartArea();
-            Legend legend1 = new Legend();
-            Series series1 = new Series();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.addButton = new System.Windows.Forms.Button();
-            this.chart1 = new Chart();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            this.SuspendLayout();
-            //
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            dataGridView1 = new DataGridView();
+            comboBox1 = new ComboBox();
+            button2 = new Button();
+            button1 = new Button();
+            button3 = new Button();
+            dataGridView2 = new DataGridView();
+            button4 = new Button();
+            chart1 = new Chart();
+            textBox3 = new TextBox();
+            colorDialog1 = new ColorDialog();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            SuspendLayout();
+            // 
             // dataGridView1
-            //
-            this.dataGridView1.ColumnHeadersHeightSizeMode =
-            System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(321, 57);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
-            this.dataGridView1.TabIndex = 0;
-            //
-            // addButton
-            //
-            this.addButton.Location = new System.Drawing.Point(486, 213);
-            this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(75, 23);
-            this.addButton.TabIndex = 1;
-            this.addButton.Text = "Add";
-            this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.AddButton_Click);
-            //
-            // chart1
-            //
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(12, 16);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series1.XValueMember = "X";
-            series1.YValueMembers = "Y";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(300, 300);
-            this.chart1.TabIndex = 2;
-            this.chart1.Text = "chart1";
-            //
-            // button1
-            //
-            this.button1.Location = new System.Drawing.Point(321, 213);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Draw as lines";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.DrawAsLines_Click);
-            //
+            // 
+            dataGridView1.BackgroundColor = SystemColors.ButtonFace;
+            dataGridView1.BorderStyle = BorderStyle.None;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            resources.ApplyResources(dataGridView1, "dataGridView1");
+            dataGridView1.Name = "dataGridView1";
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { resources.GetString("comboBox1.Items"), resources.GetString("comboBox1.Items1") });
+            resources.ApplyResources(comboBox1, "comboBox1");
+            comboBox1.Name = "comboBox1";
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
+            // 
             // button2
-            //
-            this.button2.Location = new System.Drawing.Point(321, 242);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(115, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Draw as spline";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.DrawAsSpline_Click);
-            //
+            // 
+            resources.ApplyResources(button2, "button2");
+            button2.Name = "button2";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += Load_Click;
+            // 
+            // button1
+            // 
+            resources.ApplyResources(button1, "button1");
+            button1.Name = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Save_Click;
+            // 
+            // button3
+            // 
+            resources.ApplyResources(button3, "button3");
+            button3.Name = "button3";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += AddButton_Click;
+            // 
+            // dataGridView2
+            // 
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.BackgroundColor = SystemColors.ButtonFace;
+            dataGridView2.BorderStyle = BorderStyle.None;
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            resources.ApplyResources(dataGridView2, "dataGridView2");
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.ReadOnly = true;
+            // 
+            // button4
+            // 
+            resources.ApplyResources(button4, "button4");
+            button4.Name = "button4";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // chart1
+            // 
+            chart1.BackColor = SystemColors.GradientInactiveCaption;
+            resources.ApplyResources(chart1, "chart1");
+            chart1.Name = "chart1";
+            chart1.MouseMove += MouseMove_Handler;
+            // 
+            // textBox3
+            // 
+            resources.ApplyResources(textBox3, "textBox3");
+            textBox3.Name = "textBox3";
+            // 
             // Form1
-            //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode =
-           System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 397);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.chart1);
-            this.Controls.Add(this.addButton);
-            this.Controls.Add(this.dataGridView1);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            this.ResumeLayout(false);
+            // 
+            resources.ApplyResources(this, "$this");
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(textBox3);
+            Controls.Add(chart1);
+            Controls.Add(button4);
+            Controls.Add(dataGridView2);
+            Controls.Add(button3);
+            Controls.Add(button1);
+            Controls.Add(button2);
+            Controls.Add(comboBox1);
+            Controls.Add(dataGridView1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            Name = "Form1";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
+
 
         #endregion
 
-        private DataGridView dataGridView1;
-        private Button addButton;
-        private Chart chart1;
-        private Button button1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private ComboBox comboBox1;
         private Button button2;
+        private Button button1;
+        private Button button3;
+        private DataGridView dataGridView2;
+        private Button button4;
+        private Chart chart1;
+        private TextBox textBox3;
+        private ColorDialog colorDialog1;
     }
 }
