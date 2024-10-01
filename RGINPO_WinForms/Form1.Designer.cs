@@ -1,3 +1,4 @@
+
 ﻿namespace RGINPO_WinForms
 {
     partial class Form1
