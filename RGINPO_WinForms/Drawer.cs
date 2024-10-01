@@ -30,6 +30,8 @@ public class Drawer
 
     public void DrawSpline(Data[] points, Color color, Int32 borderWidth)
     {
+        if (points is null || points.Length < 3) return;
+
         _drawer?.DrawCurve(new Pen(color, borderWidth), TranslatePointsFromDrawAriaToApplicationArea(points));
     }
 
