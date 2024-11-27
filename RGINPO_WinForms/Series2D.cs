@@ -5,6 +5,8 @@ namespace RGINPO_WinForms;
 
 public class Series2D : INotifyPropertyChanged
 {
+    private delegate void DrawMethod(Data[] points, Color color, Int32 borderWidth);
+
     private Data[] _points = [];
     private Color _color = Color.Black;
     private int _borderWidth = 1;
@@ -68,13 +70,12 @@ public class Series2D : INotifyPropertyChanged
 
     public void Draw(Drawer drawer)
     {
-        if (ChartType is ChartType.Line)
+        Dictionary<ChartType, DrawMethod> drawDictionary = new()
         {
-            drawer.DrawLines(Points, Color, BorderWidth);
-        }
-        else
-        {
-            drawer.DrawSpline(Points, Color, BorderWidth);
-        }
+            { ChartType.Line, drawer.DrawLines},
+            { ChartType.Spline, drawer.DrawSpline},
+        };
+
+        drawDictionary[ChartType](Points, Color, BorderWidth);
     }
 }
