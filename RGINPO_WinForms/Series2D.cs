@@ -76,6 +76,11 @@ public class Series2D : INotifyPropertyChanged
             { ChartType.Spline, drawer.DrawSpline},
         };
 
-        drawDictionary[ChartType](Points, Color, BorderWidth);
+        if (!drawDictionary.TryGetValue(ChartType, out var method))
+        {
+            throw new InvalidOperationException($"Не существует метода для рисования {ChartType}");
+        }
+
+        method?.Invoke(Points, Color, BorderWidth);
     }
 }
